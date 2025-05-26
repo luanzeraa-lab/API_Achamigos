@@ -11,22 +11,10 @@ app.use(cors(["*"]));
 
 const port = 80;
 
-app.get("/", (req, res) =>{
-    res.send("Ola!!!");
-})
+
 
 let contadorA = 0;
 let animals =[];
-app.post("/animais", (req, res)=>{
-  const newAnimal = {
-    id: contadorA++,
-    nome: req.body.nome,
-    raca: req.body.raca,
-  };
-  animals.push(newAnimal);
-  res.status(201).json(newAnimal);
-})
-
 
 const storage = multer.diskStorage({
   destination: function(req, file, cb){
@@ -37,7 +25,8 @@ const storage = multer.diskStorage({
   }
 });
 
-const upload = multer({storage}).single("file");
+const upload = multer({storage})
+/*.single("file");
 
 app.post("/upload", (req, res)=>{
   upload(req, res, (err)=>{
@@ -50,7 +39,26 @@ app.post("/upload", (req, res)=>{
 
     return res.status(200).send({message: "Upload realizado com sucesso!"})
   });
+});*/
+
+app.post("/animais", upload.single("imagem"), (req, res)=>{
+  const newAnimal = {
+    id: contadorA++,
+    nome: req.body.nome,
+    idade: req.body.idade,
+    raca: req.body.raca,
+    sexo: req.body.sexo,
+    porte: req.body.porte,
+    peso: req.body.peso,
+    observacoes: req.body.observacoes,
+    castracao: req.body.castracao,
+    imagem:req.file ? req.file.filename : null
+  };
+
+  animals.push(newAnimal);
+  res.status(201).json(newAnimal);
 });
+
 
 app.get("/animais", (req, res) => {
   res.json(animals);
