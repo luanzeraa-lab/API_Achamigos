@@ -8,6 +8,7 @@ const app = express();
 
 app.use(express.json());
 app.use(cors(["*"]));
+app.use('/public', express.static(`${__dirname}/public`));
 
 const port = 80;
 
